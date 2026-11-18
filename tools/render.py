@@ -9,9 +9,11 @@ from pixels import length, lettering
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "assets" / "terminal"
 ASSETS.mkdir(parents=True, exist_ok=True)
-INK, PANEL, LINE = '#171b35', '#202643', '#404867'
-PAPER, LAV, LAV_SHADE = '#fff1d2', '#a9b6ff', '#8998e2'
-MINT, BUTTER, ROSE = '#95f2cd', '#ffda82', '#ffaaa7'
+# Sampled from the pixel avatar, with lighter and darker shades for legibility.
+SKY, NAVY, GOLD, PEACH = '#9fb9cf', '#1f2a44', '#d7b46a', '#e9b993'
+COCOA, COPPER = '#3b2618', '#b07a52'
+INK, LINE, STEEL = '#141c2b', '#46576a', '#748fa5'
+PAPER, BODY_TEXT = '#fff1e1', '#d9e2e9'
 BIO = ("My background is in mechatronics. I write software for factory cameras, "
        "build tools for AI coding agents, and develop web and mobile apps.")
 ROLE = "AI systems & full-stack engineer"
@@ -90,7 +92,7 @@ BOT = [
     '      nnwwn  nwwnn       ',
     '      nnnnn  nnnnn       ',
 ]
-BOT_PALETTE = {'n':INK,'o':'#9c6c58','w':BUTTER,'d':'#304966','m':MINT,'r':ROSE,'i':'#74c8ae'}
+BOT_PALETTE = {'n': INK, 'o': COPPER, 'w': GOLD, 'd': NAVY, 'm': SKY, 'r': PEACH, 'i': STEEL}
 
 def sprite(screen, rows, colors, x, y, zoom):
     screen.parts.append('<g shape-rendering="crispEdges">')
@@ -109,34 +111,34 @@ def hero(compact):
     screen = Screen(width)
     pad = 14 if compact else 24
     screen.rect(0, 0, width, 24, INK)
-    screen.rect(pad, 9, 5, 5, MINT)
+    screen.rect(pad, 9, 5, 5, GOLD)
     screen.label("OMER SUKRU VAROL", pad + 11, 8, 1.23, PAPER)
-    screen.label("ISTANBUL", width - pad - length("ISTANBUL", 1.23), 8, 1.23, LAV)
+    screen.label("ISTANBUL", width - pad - length("ISTANBUL", 1.23), 8, 1.23, SKY)
 
-    headline = "Im Omer"
+    headline = "I'm Omer"
     unit = 2.95 if compact else 5.7
     y = 48 if compact else 62
-    screen.label(headline, pad + unit * .45, y + unit * .5, unit, LAV_SHADE, True)
-    screen.label(headline, pad, y, unit, INK, True)
+    screen.label(headline, pad + unit * .45, y + unit * .5, unit, STEEL, True)
+    screen.label(headline, pad, y, unit, COCOA, True)
     sub_y = 94 if compact else 124
     screen.label(ROLE, pad, sub_y, 1.52 if compact else 1.9, INK, True)
 
     field_x, field_y, field_w, field_h = (224, 33, 74, 54) if compact else (448, 35, 172, 107)
     for gy in range(field_y, field_y + field_h, 7):
         for gx in range(field_x, field_x + field_w, 7):
-            screen.rect(gx, gy, 1, 1, '#7788cf')
+            screen.rect(gx, gy, 1, 1, STEEL)
     zoom = 2.1 if compact else 4.1
     bx = field_x + (field_w - 24 * zoom) / 2
     by = field_y + (field_h - 24 * zoom) / 2
-    screen.rect(bx + 4 * zoom, by + 24 * zoom, 16 * zoom, zoom, '#7e89c9')
+    screen.rect(bx + 4 * zoom, by + 24 * zoom, 16 * zoom, zoom, STEEL)
     sprite(screen, BOT, BOT_PALETTE, bx, by, zoom)
     bio_end = screen.paragraph(BIO, pad, sub_y + (23 if compact else 31),
                                1.56 if compact else 1.76, width - 2 * pad,
                                18 if compact else 20, INK)
     footer = round(bio_end + 16)
-    screen.parts.insert(0, f'<rect width="{width}" height="{footer}" fill="{LAV}"/>')
+    screen.parts.insert(0, f'<rect width="{width}" height="{footer}" fill="{SKY}"/>')
     screen.rect(0, footer, width, 24, INK)
-    screen.label("WORK & EXPERIENCE", pad, footer + 8, 1.2, MINT)
+    screen.label("WORK & EXPERIENCE", pad, footer + 8, 1.2, GOLD)
     start = pad + length("WORK & EXPERIENCE", 1.2) + 10
     screen.rect(start, footer + 12, width - start - pad, 1, LINE)
     return screen, footer + 24
@@ -148,7 +150,7 @@ def experience(compact, index):
     screen = Screen(width)
     _, title, detail, _ = WORK[index]
     x = pad + (15 if compact else 20)
-    accent = [MINT, BUTTER, ROSE][index]
+    accent = [SKY, GOLD, PEACH][index]
     unit = 1.66 if compact else 2.05
     top = 11 if compact else 13
     # The entire bullet links to the work, including its caption.
@@ -157,9 +159,9 @@ def experience(compact, index):
                            18 if compact else 22, PAPER)
     arrow(screen, width - pad - 9, top + 2, 1.2, accent)
     end = screen.paragraph(detail, x, end + 4, 1.38 if compact else 1.55,
-                           width - x - pad, 15 if compact else 18, '#d5dbef')
+                           width - x - pad, 15 if compact else 18, BODY_TEXT)
     height = round(end + 9)
-    screen.parts.insert(0, f'<rect width="{width}" height="{height}" fill="{PANEL}"/>')
+    screen.parts.insert(0, f'<rect width="{width}" height="{height}" fill="{NAVY}"/>')
     screen.rect(pad, height - 1, width - 2 * pad, 1, LINE)
     return screen, height
 
@@ -169,7 +171,7 @@ def contact_button(slug, label):
     width = round(length(label, unit) + 25)
     screen = Screen(width)
     screen.rect(0, 0, width, 32, INK)
-    screen.rect(1, 1, width - 2, 30, MINT if slug == 'contact' else LAV)
+    screen.rect(1, 1, width - 2, 30, GOLD if slug == 'contact' else SKY)
     screen.label(label, 6, 10, unit, INK)
     arrow(screen, width - 14, 11, 1.2, INK)
     screen.save(slug, 32, label)
@@ -191,7 +193,7 @@ def stats_panel(compact, stats, shares, stamp):
     pad = 13 if compact else 23
     screen.label("My GitHub Stats", pad, 14, 2.25 if compact else 3.0, PAPER, True)
     right = width - pad - length(stamp, 1.15)
-    screen.label(stamp, right, 20, 1.15, LAV)
+    screen.label(stamp, right, 20, 1.15, SKY)
     columns = [
         (stats['public_repositories'], 'Public repos'),
         (stats['public_pull_requests_authored'], 'PRs opened'),
@@ -203,15 +205,15 @@ def stats_panel(compact, stats, shares, stamp):
         x = pad + i * col
         if i:
             screen.rect(x - 5, y, 1, 37, LINE)
-        screen.label(str(value), x, y, 2.8 if compact else 3.5, MINT, True)
+        screen.label(str(value), x, y, 2.8 if compact else 3.5, GOLD, True)
         screen.label(label, x, y + (27 if compact else 34),
-                     1.12 if compact else 1.55, '#d5dbef')
+                     1.12 if compact else 1.55, BODY_TEXT)
     y += 56 if compact else 68
     screen.rect(pad, y, width - 2 * pad, 1, LINE)
     y += 16
     screen.label("Most used languages", pad, y, 1.8 if compact else 2.15, PAPER, True)
     y += 26 if compact else 30
-    palette = [LAV, ROSE, MINT, BUTTER, '#91a3c0']
+    palette = [SKY, PEACH, GOLD, COPPER, STEEL]
     bar = width - 2 * pad
     offset = 0
     for i, (_, share) in enumerate(shares):
@@ -228,11 +230,11 @@ def stats_panel(compact, stats, shares, stamp):
             x = pad
             y += 18 if compact else 22
         screen.rect(x, y + 2, 5, 5, palette[i])
-        screen.label(label, x + 9, y, unit, '#e1e4f6')
+        screen.label(label, x + 9, y, unit, BODY_TEXT)
         x += item_w + (10 if compact else 15)
     note = "By code size in my public repos, excluding forks and this profile."
     end = screen.paragraph(note, pad, y + 22, 1.25 if compact else 1.42,
-                           width - 2 * pad, 15, '#b6c1dd')
+                           width - 2 * pad, 15, SKY)
     height = round(end + 13)
     screen.parts.insert(0, f'<rect width="{width}" height="{height}" fill="{INK}"/>')
     return screen, height
@@ -249,7 +251,7 @@ def render():
     stats = json.loads((ROOT / 'tools/stats.json').read_text())
     stamp = date.fromisoformat(stats['as_of']).strftime('%d %b %Y')
     shares = language_shares(stats['language_bytes'])
-    intro = f"Im Omer. Omer Sukru Varol, {ROLE} in Istanbul. {BIO} Work and experience."
+    intro = f"I'm Omer. Omer Sukru Varol, {ROLE} in Istanbul. {BIO} Work and experience."
     stats_alt = (f"My GitHub Stats as of {stamp}. {stats['public_repositories']} public repos, "
                  f"{stats['public_pull_requests_authored']} public pull requests opened and "
                  f"{stats['public_issues_authored']} public issues opened. Most used languages by "
