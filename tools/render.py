@@ -7,7 +7,8 @@ from pathlib import Path
 from pixels import length, lettering
 
 ROOT = Path(__file__).resolve().parents[1]
-ASSETS = ROOT / "assets" / "terminal"
+ASSET_PATH = "assets/portrait"
+ASSETS = ROOT / ASSET_PATH
 ASSETS.mkdir(parents=True, exist_ok=True)
 # Sampled from the pixel avatar, with lighter and darker shades for legibility.
 SKY, NAVY, GOLD, PEACH = '#9fb9cf', '#1f2a44', '#d7b46a', '#e9b993'
@@ -241,7 +242,7 @@ def stats_panel(compact, stats, shares, stamp):
 
 
 def picture(name, alt, target=None):
-    base = './assets/terminal/' + name
+    base = f'./{ASSET_PATH}/{name}'
     image = (f'<picture><source media="(max-width: 767px)" srcset="{base}-mobile.svg">'
              f'<img src="{base}.svg" width="100%" alt="{escape(alt, quote=True)}"></picture>')
     return f'<a href="{escape(target, quote=True)}">{image}</a>' if target else image
@@ -271,7 +272,7 @@ def render():
     buttons = []
     for slug, label, url in CONTACT:
         width = contact_button(slug, label)
-        buttons.append(f'<a href="{url}"><img src="./assets/terminal/{slug}.svg" '
+        buttons.append(f'<a href="{url}"><img src="./{ASSET_PATH}/{slug}.svg" '
                        f'width="{width}" height="32" alt="{label}"></a>')
     sections = [picture('hello', intro), roles, ' '.join(buttons), picture('stats', stats_alt)]
     (ROOT / 'README.md').write_text('\n\n'.join(sections) + '\n')
