@@ -110,10 +110,10 @@ def hero(compact):
     pad = 14 if compact else 24
     screen.rect(0, 0, width, 24, INK)
     screen.rect(pad, 9, 5, 5, MINT)
-    screen.label("ÖMER ŞÜKRÜ VAROL", pad + 11, 8, 1.23, PAPER)
+    screen.label("OMER SUKRU VAROL", pad + 11, 8, 1.23, PAPER)
     screen.label("ISTANBUL", width - pad - length("ISTANBUL", 1.23), 8, 1.23, LAV)
 
-    headline = "Hi, I'm Ömer."
+    headline = "Im Omer"
     unit = 2.95 if compact else 5.7
     y = 48 if compact else 62
     screen.label(headline, pad + unit * .45, y + unit * .5, unit, LAV_SHADE, True)
@@ -249,7 +249,7 @@ def render():
     stats = json.loads((ROOT / 'tools/stats.json').read_text())
     stamp = date.fromisoformat(stats['as_of']).strftime('%d %b %Y')
     shares = language_shares(stats['language_bytes'])
-    intro = f"Hi, I'm Ömer Şükrü Varol. {ROLE} in Istanbul. {BIO} Work and experience."
+    intro = f"Im Omer. Omer Sukru Varol, {ROLE} in Istanbul. {BIO} Work and experience."
     stats_alt = (f"My GitHub Stats as of {stamp}. {stats['public_repositories']} public repos, "
                  f"{stats['public_pull_requests_authored']} public pull requests opened and "
                  f"{stats['public_issues_authored']} public issues opened. Most used languages by "
