@@ -1,43 +1,34 @@
-"""Run python3 tools/render.py to rebuild the profile. No font, service or package required."""
+"""Render the English GitHub profile using the checked-in public stats snapshot."""
+from datetime import date
 from html import escape
+import json
 from pathlib import Path
+
 from pixels import length, lettering
 
 ROOT = Path(__file__).resolve().parents[1]
-ASSETS = ROOT / 'assets' / 'terminal'
+ASSETS = ROOT / "assets" / "terminal"
 ASSETS.mkdir(parents=True, exist_ok=True)
 INK, PANEL, LINE = '#171b35', '#202643', '#404867'
 PAPER, LAV, LAV_SHADE = '#fff1d2', '#a9b6ff', '#8998e2'
 MINT, BUTTER, ROSE = '#95f2cd', '#ffda82', '#ffaaa7'
-
-COPY = {
-    'tr': {
-        'terminal':'KİŞİSEL TERMİNAL', 'city':'İSTANBUL', 'projects':'PROJELER',
-        'bio':'Mekatronik kökenli bir Ar-Ge mühendisiyim. Endüstriyel görüntü işleme, yapay zekâ ajanları ve web/mobil uygulamalar geliştiriyorum.',
-        'work':[
-            ('Landed', 'TypeScript / Git', 'Ajanların yazdığı kod Git’e girdi mi? Landed, Claude Code ve Codex oturumlarını yerel commit’lerle eşleştiriyor.'),
-            ('Linkletics', 'Go / TypeScript', 'Sporcular için bir sosyal ağ. Web ve mobilin ortak API’lerini yazıyor, PHP altyapısını Go servislerine taşıyorum.'),
-            ('PID Tuning Visualizer', 'Python / Matplotlib', 'Üç katsayıyı değiştir, sistemin tepkisini grafikte izle. Kontrol ayarlarını denemek için yazdığım bir simülatör.'),
-        ],
-        'links': [('Portfolyo','https://omersukruvarol.com/'), ('LinkedIn','https://www.linkedin.com/in/omersukruvarol/'), ('English','./README.en.md')],
-    },
-    'en': {
-        'terminal':'PERSONAL TERMINAL', 'city':'ISTANBUL', 'projects':'PROJECTS',
-        'bio':'I’m an R&D engineer with a background in mechatronics. I build industrial vision systems, AI agents, and apps for web and mobile.',
-        'work':[
-            ('Landed', 'TypeScript / Git', 'What did Claude Code and Codex write, and what made it into a commit? Landed checks their edits against your local Git history.'),
-            ('Linkletics', 'Go / TypeScript', 'A social network for athletes. I build the APIs its web and mobile apps share and move the PHP backend to Go services.'),
-            ('PID Tuning Visualizer', 'Python / Matplotlib', 'Drag three sliders and watch the system respond. I built this simulator to experiment with controller gains.'),
-        ],
-        'links':[('Portfolio','https://omersukruvarol.com/'), ('LinkedIn','https://www.linkedin.com/in/omersukruvarol/'), ('Türkçe','./README.md')],
-    },
-}
-PROJECT_URLS = [
-    'https://github.com/omersukruvarol/landed-agents', 'https://omersukruvarol.com/#work',
-    'https://github.com/omersukruvarol/PID-Tuning-Visualizer',
+BIO = ("My background is in mechatronics. I write software for factory cameras, "
+       "build tools for AI coding agents, and develop web and mobile apps.")
+ROLE = "AI systems & full-stack engineer"
+PORTFOLIO = "https://omersukruvarol.com/"
+EXPERIENCE = PORTFOLIO + "#experience-title"
+WORK = [
+    ("farmakod", "R&D engineer at FarmaKod", "Industrial computer vision and AI on embedded devices.", EXPERIENCE),
+    ("linkletics", "Building Linkletics", "I develop the Go APIs behind its web and mobile apps for athletes.", PORTFOLIO + "#work"),
+    ("landed", "Creator of Landed", "I trace edits from Claude Code and Codex sessions into Git commits.", "https://github.com/omersukruvarol/landed-agents"),
+    ("turali", "Backend intern at Turali Group", "2022", EXPERIENCE),
+    ("sfs", "Full-stack intern at SFS Software", "2021-2022", EXPERIENCE),
 ]
-SLUGS = ['landed', 'linkletics', 'pid']
-ACCENT = [MINT, BUTTER, ROSE]
+CONTACT = [
+    ("contact", "Get in touch", "mailto:omersukruvarol@gmail.com"),
+    ("linkedin", "LinkedIn", "https://www.linkedin.com/in/omersukruvarol/"),
+    ("portfolio", "Portfolio", PORTFOLIO),
+]
 
 class Screen:
     def __init__(self, width):
@@ -111,129 +102,180 @@ def sprite(screen, rows, colors, x, y, zoom):
                 screen.rect(x+col*zoom, y+row_id*zoom, zoom, zoom, colors[pixel])
     screen.parts.append('</g>')
 
-ICONS = [
-    ['    xx       ', '   x  x      ', '    xx       ', '    xx    xx ', '    xx   x  x',
-     '    xx    xx ', '    xx   xx  ', '    xx  xx   ', '    xxxxx    ', '    xx       ',
-     '   x  x      ', '    xx       '],
-    ['       xxxx  ', '      xx  xx ', '      x    x ', '     xx   xx ', '      x  xx  ',
-     '   xxx xxx   ', '  xx  x      ', ' xx   xx     ', ' x    x      ', ' xx  xx      ', '  xxxx       '],
-    [' x           ', ' x     xxx   ', ' x    xx xx  ', ' x    x   xxx', ' x   xx      ',
-     ' x   x       ', ' x  xx       ', ' xxxx        ', ' x           ', ' xxxxxxxxxxxx'],
-]
-
 def arrow(screen, x, y, u, color):
     screen.path('M1 0h6v6H5V3H4v1H3v1H2v1H1v1H0V5h1V4h1V3h1V2h1V1H1z',color,
                 f'translate({x} {y}) scale({u})')
 
-def hero(lang, compact):
-    c = COPY[lang]
-    w = 304 if compact else 640
-    s = Screen(w)
-    # Insert the lavender base after measuring the paragraph.
-    s.rect(0,0,w,26,INK)
-    s.rect(11,9,7,7,MINT)
-    s.label(c['terminal'],24,8,1.25,PAPER)
-    city_width = length(c['city'],1.25)
-    s.label(c['city'],w-city_width-12,8,1.25,LAV)
-    x = 15 if compact else 26
-    unit = 3.1 if compact else 6
-    first, second = (48,81) if compact else (58,121)
-    for line, y in [('ÖMER ŞÜKRÜ',first), ('VAROL',second)]:
-        s.label(line,x+unit*.48,y+unit*.54,unit,LAV_SHADE,True)
-        s.label(line,x,y,unit,INK,True)
-    field_x, field_y, field_w, field_h = (196,37,97,72) if compact else (390,40,222,122)
-    for gy in range(field_y+2,field_y+field_h,8):
-        for gx in range(field_x,field_x+field_w,8):
-            s.rect(gx,gy,1.25,1.25,'#7686ca')
-    zoom = 2.65 if compact else 5.0
-    bx = field_x+(field_w-24*zoom)/2
-    by = field_y+(field_h-24*zoom)/2
-    s.rect(bx+4*zoom,by+24*zoom,16*zoom,zoom,'#7e89c9')
-    sprite(s,BOT,BOT_PALETTE,bx,by,zoom)
-    by_text = 123 if compact else 185
-    last = s.paragraph(c['bio'],x,by_text,1.62 if compact else 1.88,
-                       w-2*x,19 if compact else 22,INK)
-    divider = round(last + (15 if compact else 20))
-    s.rect(0,divider,w,24,INK)
-    s.label(c['projects'],x,divider+8,1.26,MINT)
-    start = round(x+length(c['projects'],1.26)+9)
-    s.rect(start,divider+12,w-start-x,1,LINE)
-    s.parts.insert(0,f'<rect width="{w}" height="{divider}" fill="{LAV}"/>')
-    return s, divider+24
+def hero(compact):
+    width = 304 if compact else 640
+    screen = Screen(width)
+    pad = 14 if compact else 24
+    screen.rect(0, 0, width, 24, INK)
+    screen.rect(pad, 9, 5, 5, MINT)
+    screen.label("ÖMER ŞÜKRÜ VAROL", pad + 11, 8, 1.23, PAPER)
+    screen.label("ISTANBUL", width - pad - length("ISTANBUL", 1.23), 8, 1.23, LAV)
 
-def card(lang, index, compact):
-    w = 304 if compact else 640
-    s = Screen(w)
-    title, tech, summary = COPY[lang]['work'][index]
-    accent = ACCENT[index]
-    p = 11 if compact else 14
-    icon_size = 32 if compact else 56
-    ix, iy = p, (13 if compact else 14)
-    s.rect(ix,iy,icon_size,icon_size,accent)
-    zoom = 2 if compact else 3
-    sprite(s,ICONS[index],{'x':INK},ix+(icon_size-13*zoom)//2,iy+(icon_size-len(ICONS[index])*zoom)//2,zoom)
-    x = ix+icon_size+(10 if compact else 18)
-    s.label(tech,x,13 if compact else 17,1.13 if compact else 1.5,accent)
-    title_y = 32 if compact else 39
-    title_unit = 1.88 if compact and index==2 else (2.28 if compact else 3.25)
-    s.label(title,x,title_y,title_unit,PAPER,True)
-    ax = w-(27 if compact else 42)
-    arrow(s,ax,14 if compact else 22,1.6 if compact else 2.4,accent)
-    body_x = p if compact else x
-    body_y = 58 if compact else 76
-    last = s.paragraph(summary,body_x,body_y,1.52 if compact else 1.68,w-body_x-p-4,
-                       17 if compact else 19,'#e1e4f6')
-    height = round(last + (12 if compact else 16))
-    # A cartridge lip and a corner notch make each independent link read as a control.
-    shape = f'M0 0h{w-7}v3h4v4h3v{height-7}H0z'
-    s.parts.insert(0,f'<path d="{shape}" fill="{PANEL}"/>')
-    s.rect(0,height-2,w,2,LINE)
-    return s, height
+    headline = "Hi, I'm Ömer."
+    unit = 2.95 if compact else 5.7
+    y = 48 if compact else 62
+    screen.label(headline, pad + unit * .45, y + unit * .5, unit, LAV_SHADE, True)
+    screen.label(headline, pad, y, unit, INK, True)
+    sub_y = 94 if compact else 124
+    screen.label(ROLE, pad, sub_y, 1.52 if compact else 1.9, INK, True)
 
-def button(label, kind, name):
-    u = 1.52
-    w = round(length(label,u)+32)
-    s = Screen(w)
-    s.rect(0,0,w,32,INK)
-    s.rect(1,1,w-2,30,MINT if kind==2 else LAV)
-    s.label(label,9,10,u,INK)
-    if kind==2:
-        s.path('M0 0h2v1h2v1h2v1H4v1H2v1H0z',INK,f'translate({w-17} 12) scale(1.5)')
-    else:
-        arrow(s,w-18,11,1.35,INK)
-    s.save(name,32,label)
-    return w
+    field_x, field_y, field_w, field_h = (224, 33, 74, 54) if compact else (448, 35, 172, 107)
+    for gy in range(field_y, field_y + field_h, 7):
+        for gx in range(field_x, field_x + field_w, 7):
+            screen.rect(gx, gy, 1, 1, '#7788cf')
+    zoom = 2.1 if compact else 4.1
+    bx = field_x + (field_w - 24 * zoom) / 2
+    by = field_y + (field_h - 24 * zoom) / 2
+    screen.rect(bx + 4 * zoom, by + 24 * zoom, 16 * zoom, zoom, '#7e89c9')
+    sprite(screen, BOT, BOT_PALETTE, bx, by, zoom)
+    bio_end = screen.paragraph(BIO, pad, sub_y + (23 if compact else 31),
+                               1.56 if compact else 1.76, width - 2 * pad,
+                               18 if compact else 20, INK)
+    footer = round(bio_end + 16)
+    screen.parts.insert(0, f'<rect width="{width}" height="{footer}" fill="{LAV}"/>')
+    screen.rect(0, footer, width, 24, INK)
+    screen.label("WORK & EXPERIENCE", pad, footer + 8, 1.2, MINT)
+    start = pad + length("WORK & EXPERIENCE", 1.2) + 10
+    screen.rect(start, footer + 12, width - start - pad, 1, LINE)
+    return screen, footer + 24
 
-def responsive(slug, alt, url=None):
-    base = './assets/terminal/' + slug
-    label = escape(alt,quote=True)
-    pic = (f'<picture><source media="(max-width: 767px)" srcset="{base}-mobile.svg">'
-           f'<img src="{base}.svg" width="100%" alt="{label}"></picture>')
-    return f'<a href="{url}">{pic}</a>' if url else pic
 
-def render(lang):
-    c = COPY[lang]
-    alt = 'Ömer Şükrü Varol · '+c['city']+'. '+c['bio']
-    sections = []
-    for compact in (False,True):
+def experience(compact, index):
+    width = 304 if compact else 640
+    pad = 13 if compact else 23
+    screen = Screen(width)
+    _, title, detail, _ = WORK[index]
+    x = pad + (15 if compact else 20)
+    accent = [MINT, BUTTER, ROSE, LAV, LAV][index]
+    unit = 1.66 if compact else 2.05
+    top = 11 if compact else 13
+    # The entire bullet links to the work, including its caption.
+    screen.rect(pad, top + 3, 5, 5, accent)
+    end = screen.paragraph(title, x, top, unit, width - x - pad - 17,
+                           18 if compact else 22, PAPER)
+    arrow(screen, width - pad - 9, top + 2, 1.2, accent)
+    end = screen.paragraph(detail, x, end + 4, 1.38 if compact else 1.55,
+                           width - x - pad, 15 if compact else 18, '#d5dbef')
+    height = round(end + 9)
+    screen.parts.insert(0, f'<rect width="{width}" height="{height}" fill="{PANEL}"/>')
+    screen.rect(pad, height - 1, width - 2 * pad, 1, LINE)
+    return screen, height
+
+
+def contact_button(slug, label):
+    unit = 1.4
+    width = round(length(label, unit) + 25)
+    screen = Screen(width)
+    screen.rect(0, 0, width, 32, INK)
+    screen.rect(1, 1, width - 2, 30, MINT if slug == 'contact' else LAV)
+    screen.label(label, 6, 10, unit, INK)
+    arrow(screen, width - 14, 11, 1.2, INK)
+    screen.save(slug, 32, label)
+    return width
+
+
+def language_shares(data):
+    ordered = sorted(data.items(), key=lambda item: -item[1])
+    shown = ordered[:4]
+    if len(ordered) > 4:
+        shown.append(('Other', sum(size for _, size in ordered[4:])))
+    total = sum(data.values())
+    return [(name, size / total) for name, size in shown] if total else []
+
+
+def stats_panel(compact, stats, shares, stamp):
+    width = 304 if compact else 640
+    screen = Screen(width)
+    pad = 13 if compact else 23
+    screen.label("My GitHub Stats", pad, 14, 2.25 if compact else 3.0, PAPER, True)
+    right = width - pad - length(stamp, 1.15)
+    screen.label(stamp, right, 20, 1.15, LAV)
+    columns = [
+        (stats['public_repositories'], 'Public repos'),
+        (stats['public_pull_requests_authored'], 'PRs opened'),
+        (stats['public_issues_authored'], 'Issues opened'),
+    ]
+    col = (width - 2 * pad) / 3
+    y = 50 if compact else 60
+    for i, (value, label) in enumerate(columns):
+        x = pad + i * col
+        if i:
+            screen.rect(x - 5, y, 1, 37, LINE)
+        screen.label(str(value), x, y, 2.8 if compact else 3.5, MINT, True)
+        screen.label(label, x, y + (27 if compact else 34),
+                     1.12 if compact else 1.55, '#d5dbef')
+    y += 56 if compact else 68
+    screen.rect(pad, y, width - 2 * pad, 1, LINE)
+    y += 16
+    screen.label("Most used languages", pad, y, 1.8 if compact else 2.15, PAPER, True)
+    y += 26 if compact else 30
+    palette = [LAV, ROSE, MINT, BUTTER, '#91a3c0']
+    bar = width - 2 * pad
+    offset = 0
+    for i, (_, share) in enumerate(shares):
+        span = bar * share
+        screen.rect(pad + offset, y, span, 8, palette[i])
+        offset += span
+    y += 20
+    x = pad
+    for i, (name, fraction) in enumerate(shares):
+        label = f'{name} {fraction * 100:.1f}%'
+        unit = 1.23 if compact else 1.42
+        item_w = 10 + length(label, unit)
+        if x + item_w > width - pad:
+            x = pad
+            y += 18 if compact else 22
+        screen.rect(x, y + 2, 5, 5, palette[i])
+        screen.label(label, x + 9, y, unit, '#e1e4f6')
+        x += item_w + (10 if compact else 15)
+    note = "By code size in my public repos, excluding forks and this profile."
+    end = screen.paragraph(note, pad, y + 22, 1.25 if compact else 1.42,
+                           width - 2 * pad, 15, '#b6c1dd')
+    height = round(end + 13)
+    screen.parts.insert(0, f'<rect width="{width}" height="{height}" fill="{INK}"/>')
+    return screen, height
+
+
+def picture(name, alt, target=None):
+    base = './assets/terminal/' + name
+    image = (f'<picture><source media="(max-width: 767px)" srcset="{base}-mobile.svg">'
+             f'<img src="{base}.svg" width="100%" alt="{escape(alt, quote=True)}"></picture>')
+    return f'<a href="{escape(target, quote=True)}">{image}</a>' if target else image
+
+
+def render():
+    stats = json.loads((ROOT / 'tools/stats.json').read_text())
+    stamp = date.fromisoformat(stats['as_of']).strftime('%d %b %Y')
+    shares = language_shares(stats['language_bytes'])
+    intro = f"Hi, I'm Ömer Şükrü Varol. {ROLE} in Istanbul. {BIO} Work and experience."
+    stats_alt = (f"My GitHub Stats as of {stamp}. {stats['public_repositories']} public repos, "
+                 f"{stats['public_pull_requests_authored']} public pull requests opened and "
+                 f"{stats['public_issues_authored']} public issues opened. Most used languages by "
+                 "code size in my public repos, excluding forks and this profile: " +
+                 ', '.join(f'{name} {share:.1%}' for name, share in shares) + '.')
+    for compact in (False, True):
         suffix = '-mobile' if compact else ''
-        s,h = hero(lang,compact)
-        s.save(f'{lang}-hero{suffix}',h,alt)
-        for i, (name,tech,summary) in enumerate(c['work']):
-            s,h=card(lang,i,compact)
-            s.save(f'{lang}-{SLUGS[i]}{suffix}',h,name+'. '+summary)
-    sections.append(responsive(lang+'-hero',alt+' '+c['projects']))
-    for i,(title,tech,summary) in enumerate(c['work']):
-        sections.append(responsive(lang+'-'+SLUGS[i],title+'. '+tech+'. '+summary,PROJECT_URLS[i]))
+        screen, height = hero(compact)
+        screen.save('hello' + suffix, height, intro)
+        for i, (slug, title, detail, _) in enumerate(WORK):
+            screen, height = experience(compact, i)
+            screen.save(slug + suffix, height, title + '. ' + detail)
+        screen, height = stats_panel(compact, stats, shares, stamp)
+        screen.save('stats' + suffix, height, stats_alt)
+    roles = '<br>\n'.join(picture(slug, title + '. ' + detail, url)
+                          for slug, title, detail, url in WORK)
     buttons = []
-    for i,(label,target) in enumerate(c['links']):
-        slug = lang+'-link-'+str(i+1)
-        w = button(label,i,slug)
-        buttons.append(f'<a href="{target}"><img src="./assets/terminal/{slug}.svg" width="{w}" height="32" alt="{label}"></a>')
-    sections.append(' '.join(buttons))
-    readme = ROOT/('README.md' if lang=='tr' else 'README.en.md')
-    readme.write_text('\n\n'.join(sections)+'\n')
+    for slug, label, url in CONTACT:
+        width = contact_button(slug, label)
+        buttons.append(f'<a href="{url}"><img src="./assets/terminal/{slug}.svg" '
+                       f'width="{width}" height="32" alt="{label}"></a>')
+    sections = [picture('hello', intro), roles, ' '.join(buttons), picture('stats', stats_alt)]
+    (ROOT / 'README.md').write_text('\n\n'.join(sections) + '\n')
+
 
 if __name__ == '__main__':
-    for language in COPY:
-        render(language)
+    render()

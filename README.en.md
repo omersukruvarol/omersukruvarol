@@ -1,9 +1,0 @@
-<picture><source media="(max-width: 767px)" srcset="./assets/terminal/en-hero-mobile.svg"><img src="./assets/terminal/en-hero.svg" width="100%" alt="Ömer Şükrü Varol · ISTANBUL. I’m an R&amp;D engineer with a background in mechatronics. I build industrial vision systems, AI agents, and apps for web and mobile. PROJECTS"></picture>
-
-<a href="https://github.com/omersukruvarol/landed-agents"><picture><source media="(max-width: 767px)" srcset="./assets/terminal/en-landed-mobile.svg"><img src="./assets/terminal/en-landed.svg" width="100%" alt="Landed. TypeScript / Git. What did Claude Code and Codex write, and what made it into a commit? Landed checks their edits against your local Git history."></picture></a>
-
-<a href="https://omersukruvarol.com/#work"><picture><source media="(max-width: 767px)" srcset="./assets/terminal/en-linkletics-mobile.svg"><img src="./assets/terminal/en-linkletics.svg" width="100%" alt="Linkletics. Go / TypeScript. A social network for athletes. I build the APIs its web and mobile apps share and move the PHP backend to Go services."></picture></a>
-
-<a href="https://github.com/omersukruvarol/PID-Tuning-Visualizer"><picture><source media="(max-width: 767px)" srcset="./assets/terminal/en-pid-mobile.svg"><img src="./assets/terminal/en-pid.svg" width="100%" alt="PID Tuning Visualizer. Python / Matplotlib. Drag three sliders and watch the system respond. I built this simulator to experiment with controller gains."></picture></a>
-
-<a href="https://omersukruvarol.com/"><img src="./assets/terminal/en-link-1.svg" width="108" height="32" alt="Portfolio"></a> <a href="https://www.linkedin.com/in/omersukruvarol/"><img src="./assets/terminal/en-link-2.svg" width="99" height="32" alt="LinkedIn"></a> <a href="./README.md"><img src="./assets/terminal/en-link-3.svg" width="87" height="32" alt="Türkçe"></a>

@@ -1,0 +1,18 @@
+{
+  "as_of": "2026-11-18",
+  "public_repositories": 14,
+  "public_pull_requests_authored": 12,
+  "public_issues_authored": 8,
+  "language_bytes": {
+    "TypeScript": 801390,
+    "HTML": 65869,
+    "Python": 38557,
+    "CSS": 26350,
+    "JavaScript": 18140,
+    "PHP": 15139,
+    "Hack": 4678,
+    "C#": 2028,
+    "C++": 987,
+    "Dockerfile": 198
+  }
+}
