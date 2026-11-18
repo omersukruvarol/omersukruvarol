@@ -1,13 +1,9 @@
-![Ömer Şükrü Varol — İstanbul’da Boğaz’a bakan bir atölye. Tezgâhta bir kamera metal parçayı inceliyor, yanındaki ekranda bir PID eğrisi var.](./assets/istanbul-atolyesi.png)
+<picture><source media="(max-width: 767px)" srcset="./assets/terminal/tr-hero-mobile.svg"><img src="./assets/terminal/tr-hero.svg" width="100%" alt="Ömer Şükrü Varol · İSTANBUL. Mekatronik kökenli bir Ar-Ge mühendisiyim. Endüstriyel görüntü işleme, yapay zekâ ajanları ve web/mobil uygulamalar geliştiriyorum. PROJELER"></picture>
 
-[English](./README.en.md) · [Portfolyo](https://omersukruvarol.com/) · [LinkedIn](https://www.linkedin.com/in/omersukruvarol/)
+<a href="https://github.com/omersukruvarol/landed-agents"><picture><source media="(max-width: 767px)" srcset="./assets/terminal/tr-landed-mobile.svg"><img src="./assets/terminal/tr-landed.svg" width="100%" alt="Landed. TypeScript / Git. Ajanların yazdığı kod Git’e girdi mi? Landed, Claude Code ve Codex oturumlarını yerel commit’lerle eşleştiriyor."></picture></a>
 
-## Selam, ben Ömer.
+<a href="https://omersukruvarol.com/#work"><picture><source media="(max-width: 767px)" srcset="./assets/terminal/tr-linkletics-mobile.svg"><img src="./assets/terminal/tr-linkletics.svg" width="100%" alt="Linkletics. Go / TypeScript. Sporcular için bir sosyal ağ. Web ve mobilin ortak API’lerini yazıyor, PHP altyapısını Go servislerine taşıyorum."></picture></a>
 
-Mekatronik kökenli bir Ar-Ge mühendisiyim. İstanbul’da endüstriyel yazılım ve yapay zekâ üzerine çalışıyorum. Python ve OpenCV ile kameralardan gelen görüntüleri işliyor, Jetson üzerinde modeller çalıştırıyorum. Web ve mobil tarafta ise Go ile servisler, TypeScript ile arayüzler geliştiriyorum.
+<a href="https://github.com/omersukruvarol/PID-Tuning-Visualizer"><picture><source media="(max-width: 767px)" srcset="./assets/terminal/tr-pid-mobile.svg"><img src="./assets/terminal/tr-pid.svg" width="100%" alt="PID Tuning Visualizer. Python / Matplotlib. Üç katsayıyı değiştir, sistemin tepkisini grafikte izle. Kontrol ayarlarını denemek için yazdığım bir simülatör."></picture></a>
 
-### Tezgâhımdan üç proje
-
-- **[Landed](https://github.com/omersukruvarol/landed-agents)** — Claude Code ve Codex’in yazdığı kodun ne kadarı gerçekten bir commit’e girdi? Landed bu soruyu yanıtlamak için ajan oturumlarını bilgisayarındaki Git geçmişiyle eşleştiriyor.
-- **[Linkletics](https://omersukruvarol.com/#work)** — Sporcular için bir sosyal platform. Web ve mobil uygulamaların ortak kullandığı API’leri geliştiriyor, eski PHP/Laravel altyapısını Go servislerine taşıyorum.
-- **[PID Tuning Visualizer](https://github.com/omersukruvarol/PID-Tuning-Visualizer)** — Bir kontrol sistemini ayarlarken denklemin grafikteki karşılığını görmek için yazdığım Python aracı. Üç kaydırıcıyla PID katsayılarını değiştirip sistemin hedefe ne kadar hızlı ulaştığını ve hedefi ne kadar aştığını görebilirsin.
+<a href="https://omersukruvarol.com/"><img src="./assets/terminal/tr-link-1.svg" width="111" height="32" alt="Portfolyo"></a> <a href="https://www.linkedin.com/in/omersukruvarol/"><img src="./assets/terminal/tr-link-2.svg" width="99" height="32" alt="LinkedIn"></a> <a href="./README.en.md"><img src="./assets/terminal/tr-link-3.svg" width="90" height="32" alt="English"></a>
