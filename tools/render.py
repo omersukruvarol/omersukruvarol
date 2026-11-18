@@ -19,10 +19,8 @@ PORTFOLIO = "https://omersukruvarol.com/"
 EXPERIENCE = PORTFOLIO + "#experience-title"
 WORK = [
     ("farmakod", "R&D engineer at FarmaKod", "Industrial computer vision and AI on embedded devices.", EXPERIENCE),
-    ("linkletics", "Building Linkletics", "I develop the Go APIs behind its web and mobile apps for athletes.", PORTFOLIO + "#work"),
+    ("linkletics", "Building Linkletics", "I develop the Go APIs behind its web and mobile apps for athletes.", "https://linkletics.com/"),
     ("landed", "Creator of Landed", "I trace edits from Claude Code and Codex sessions into Git commits.", "https://github.com/omersukruvarol/landed-agents"),
-    ("turali", "Backend intern at Turali Group", "2022", EXPERIENCE),
-    ("sfs", "Full-stack intern at SFS Software", "2021-2022", EXPERIENCE),
 ]
 CONTACT = [
     ("contact", "Get in touch", "mailto:omersukruvarol@gmail.com"),
@@ -150,7 +148,7 @@ def experience(compact, index):
     screen = Screen(width)
     _, title, detail, _ = WORK[index]
     x = pad + (15 if compact else 20)
-    accent = [MINT, BUTTER, ROSE, LAV, LAV][index]
+    accent = [MINT, BUTTER, ROSE][index]
     unit = 1.66 if compact else 2.05
     top = 11 if compact else 13
     # The entire bullet links to the work, including its caption.
