@@ -1,5 +1,6 @@
 """Render the English GitHub profile using the checked-in public stats snapshot."""
 from datetime import date
+from hashlib import sha256
 from html import escape
 import json
 from pathlib import Path
@@ -241,10 +242,11 @@ def stats_panel(compact, stats, shares, stamp):
     return screen, height
 
 
-def picture(name, alt, target=None):
+def picture(name, alt, target=None, version=''):
     base = f'./{ASSET_PATH}/{name}'
-    image = (f'<picture><source media="(max-width: 767px)" srcset="{base}-mobile.svg">'
-             f'<img src="{base}.svg" width="100%" alt="{escape(alt, quote=True)}"></picture>')
+    query = f'?v={version}' if version else ''
+    image = (f'<picture><source media="(max-width: 767px)" srcset="{base}-mobile.svg{query}">'
+             f'<img src="{base}.svg{query}" width="100%" alt="{escape(alt, quote=True)}"></picture>')
     return f'<a href="{escape(target, quote=True)}">{image}</a>' if target else image
 
 
@@ -274,7 +276,10 @@ def render():
         width = contact_button(slug, label)
         buttons.append(f'<a href="{url}"><img src="./{ASSET_PATH}/{slug}.svg" '
                        f'width="{width}" height="32" alt="{label}"></a>')
-    sections = [picture('hello', intro), roles, ' '.join(buttons), picture('stats', stats_alt)]
+    version = sha256((ASSETS / 'stats.svg').read_bytes() +
+                     (ASSETS / 'stats-mobile.svg').read_bytes()).hexdigest()[:12]
+    sections = [picture('hello', intro), roles, ' '.join(buttons),
+                picture('stats', stats_alt, version=version)]
     (ROOT / 'README.md').write_text('\n\n'.join(sections) + '\n')
 
 
